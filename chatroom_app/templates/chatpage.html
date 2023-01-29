@@ -33,7 +33,7 @@
     getUsers();
     var lastChat = -1;
     lastChat = getChats();
-    setTimeout(scrollDiv, 100);
+    setTimeout(scrollDiv, 500);
     var interval = setInterval(getChats, 5000);
 
     function addToTable(data) {
@@ -111,11 +111,12 @@
             })
             .then(data => {
                 clearInterval(interval);
+                setTimeout(scrollDiv, 250);
                 getChats();
                 interval = setInterval(getChats, 5000);
             })
         document.getElementById("chatentry").value = '';
-        setTimeout(scrollDiv, 100);
+        setTimeout(scrollDiv, 500);
         return false;
     }
 
