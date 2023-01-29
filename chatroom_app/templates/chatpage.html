@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'chatstyle.css' %}">
+
+<body>
+    <div id="roomdiv">
+        <label id="roomid">Room ID: {{ room }}</label>
+        <button id='scrollbutton' onclick="scrollDiv()">↡</button>
+    </div>
+    <div id="db">
+        <table id="messages"></table>
+    </div>
+    <div id="form1">
+        <form id="chatform" onsubmit="return sendMessage();">
+            <input id='chatentry' name="chat" class="inp" placeholder="Chat...">
+            <input type="submit" class="submitbutton" value="⧁">
+        </form>
+    </div>
+    <br>
+    <div id="form2">
+        <form id="commandform" onsubmit="return sendCommand();">
+            <input id='commandentry' name="command" class="inp" placeholder="Command...">
+            <input type="submit" class="submitbutton" value="⧁">
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    var lastChat = -1
+    lastChat = getChats();
+    setTimeout(scrollDiv, 100);
+    setInterval(getChats, 5000);
+
+    function addToTable(data) {
+        var table = document.getElementById("messages");
+        var key = lastChat;
+        for (var key in data) {
+            var row = table.insertRow(-1);
+            var cell0 = row.insertCell(0);
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+
+            cell0.innerHTML = data[key][0]
+            cell1.innerHTML = data[key][1]
+            cell2.innerHTML = data[key][2]
+
+            cell0.style.width = '100px';
+            cell1.style.width = '440px';
+            cell2.style.width = '60px';
+
+            cell0.style.maxWidth = '100px';
+            cell1.style.maxWidth = '440px';
+            cell2.style.maxWidth = '60px';
+
+            cell0.style.wordWrap = 'break-word';
+            cell1.style.wordWrap = 'break-word';
+            cell2.style.wordWrap = 'break-word';
+
+        }
+
+        lastChat = key;
+    }
+
+    function scrollDiv() {
+        var messageBody = document.getElementById('db');
+        messageBody.scrollTop = messageBody.scrollHeight;
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function sendMessage() {
+        const csrftoken = getCookie('csrftoken');
+        var message = document.getElementById("chatentry").value;
+        fetch('./sendmsg/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'message': message,
+                'room': '{{ room }}', 'name': '{{ name }}', 'last': lastChat,
+            }) //JavaScript object of data to POST
+        })
+            .then(response => {
+                return response.json(); //Convert response to JSON
+            })
+            .then(data => {
+                addToTable(data);
+            })
+        document.getElementById("chatentry").value = '';
+        setTimeout(scrollDiv, 100);
+        return false;
+    }
+
+    function sendCommand() {
+        const csrftoken = getCookie('csrftoken');
+        var command = document.getElementById("commandentry").value;
+        var room = document.getElementById("roomid").value;
+        fetch('./sendcmd/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ 'command': command,
+            'room': '{{ room }}', 'name': '{{ name }}', 'last': lastChat, })
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                if (data["response"] == 'home') {
+                    window.location.replace('/');
+                }
+                getChats();
+            })
+        document.getElementById("commandentry").value = '';
+        return false;
+    }
+
+    function getChats() {
+        const csrftoken = getCookie('csrftoken');
+        fetch('./getchats/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ 'room': '{{ room }}', 'name': '{{ name }}', 'last': lastChat, }) //JavaScript object of data to POST
+        })
+            .then(response => {
+                return response.json(); //Convert response to JSON
+            })
+            .then(data => {
+                addToTable(data);
+            })
+        return false;
+    }
+
+</script>

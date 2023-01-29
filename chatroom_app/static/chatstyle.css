@@ -1,0 +1,73 @@
+body {
+    background-color: #000000;
+    color: #00FF00;
+}
+
+#roomdiv {
+    text-align: center;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    margin: auto;
+    width: 100%;
+}
+
+#form1 {
+    display: inline-block;
+    text-align: center;
+    margin-top: 3px;
+    margin: auto;
+    width: 100%;
+}
+
+#form2 {
+    display: inline-block;
+    text-align: center;
+    margin-top: 3px;
+    margin: auto;
+    width: 100%;
+}
+
+.inp { 
+    display: inline-block;
+    text-align: left;
+    text-indent: 2%;
+    background: #000000;
+    border-width: 0px;
+    color: #00FF00;
+    width: 300px;
+    height: 40px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    outline: none;
+}
+
+.submitbutton {
+    display: inline-block;
+    text-align: center;
+    background: #000000;
+    border-width: 0px;
+    color: #00FF00;
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#db {
+    height: 450px;
+    max-height: 450px;
+    color: #00FF00;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: auto;
+    width: 50%; 
+    overflow: auto;
+}
+
+#scrollbutton {
+    background-color: #000000;
+    color: #00FF00;
+    border: 0px;
+    font-size: 20px; 
+}

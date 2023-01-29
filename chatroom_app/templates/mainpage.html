@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'mainstyle.css' %}">
+
+<body>
+    <form action='chat/' method="post">
+        {% csrf_token %}
+        <div id="primary">
+            <input name="name" class="inp" type="Text" placeholder="Name">
+            <input name="room" class="inp" type="Text" placeholder="Room ID">
+            <input type="Submit" id="submitbutton" value="🔎︎">
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <label id="label" style="color: #00FF00; border-color: #00FF00; border-width: 2px; border-style: solid;">
+                {{ message }}
+                </label>
+            {% endfor %}
+        {% else %}
+            <label id="label" style="color: #000000; border-color: #000000; border-width: 2px; border-style: solid;">‎
+            </label>
+        {% endif %}
+        <br>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.message == "Error: Password needed" %}
+                    <input name="password" id="pw" type="Text" placeholder="Enter password">
+                {% else %}
+                <input name="password" id="pw-reject" type="Text" placeholder="">
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <input name="password" id="pw-reject" type="Text" placeholder="">
+        {% endif %}
+
+    </form>
+
+</body>
+
+</html>
