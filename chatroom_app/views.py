@@ -208,7 +208,7 @@ def removeOldUsers():
         name = i.get('username')
         time = i.get('time')
         serv = ServerList.objects.get(server=i.get('server_id'))
-        timeout = datetime.datetime.now().astimezone() - datetime.timedelta(seconds=30)
+        timeout = datetime.datetime.now().astimezone() - datetime.timedelta(seconds=15)
         if time <= timeout:
             UserList.objects.filter(userID=id).delete()
             #Show that user left
