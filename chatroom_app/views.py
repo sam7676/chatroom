@@ -208,7 +208,7 @@ def removeOldUsers():
         name = i.get('username')
         time = i.get('time')
         serv = ServerList.objects.get(server=i.get('server_id'))
-        timeout = datetime.datetime.now().astimezone() - datetime.timedelta(minutes=1)
+        timeout = datetime.datetime.now().astimezone() - datetime.timedelta(seconds=30)
         if time <= timeout:
             UserList.objects.filter(userID=id).delete()
             #Show that user left
@@ -247,4 +247,11 @@ def removeUnusedServers():
                 c.delete()
             server.delete()
             
-  
+def getusers(request):
+    removeOldUsers()
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data_from_post = json.load(request) #Get data from POST request
+        room = data_from_post["room"]
+        data = {'user_num':len(UserList.objects.filter(server=ServerList.objects.get(server=room)).values())}
+        return JsonResponse(data)
+
