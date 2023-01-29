@@ -16,7 +16,6 @@ def index(request):
     return render(request,'mainpage.html')
 
 def chat(request):
-
     removeOldChats()
     removeOldUsers()
     removeUnusedServers()
@@ -55,6 +54,9 @@ def chat(request):
             #Add user to server
             u = UserList(username=name,server=s,time=datetime.datetime.now().astimezone())
             u.save()
+            #Show that user joined
+            c = Chats(server=s,username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
+            c.save()
         else:
             #if server is locked, deny
             if serv.lockStatus==True:
@@ -79,6 +81,10 @@ def chat(request):
             #Add user to server
             u = UserList(username=name,server=serv,time=datetime.datetime.now().astimezone())
             u.save()
+            #Show that user joined
+            c = Chats(server=serv,username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
+            c.save()
+            
             #Validation done, ready to connect
         c = {
             "room":room,
@@ -199,10 +205,15 @@ def removeOldUsers():
     #Updating users from server
     for i in UserList.objects.all().order_by('time').values():
         id = i.get('userID')
+        name = i.get('username')
         time = i.get('time')
+        serv = ServerList.objects.get(server=i.get('server_id'))
         timeout = datetime.datetime.now().astimezone() - datetime.timedelta(minutes=1)
         if time <= timeout:
             UserList.objects.filter(userID=id).delete()
+            #Show that user left
+            c = Chats(server=serv,username='admin',message=f"{name} left the chat.",time=datetime.datetime.now().astimezone())
+            c.save()
         else:
             break
 
