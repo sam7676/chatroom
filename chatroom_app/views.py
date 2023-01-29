@@ -110,7 +110,6 @@ def sendmsg(request):
         msg = data_from_post.get("message")
         room = data_from_post.get("room")
         name = data_from_post.get("name")
-        last = data_from_post.get("last")
 
         #validate message
         if len(msg) > 0 and len(msg) < 100000:
@@ -127,14 +126,6 @@ def sendmsg(request):
             removeOldUsers()
             removeUnusedServers()
 
-            #return chats since last update
-            data = {}
-            for i in Chats.objects.filter(server=room).order_by('time').values():
-                if i["chatID"] > int(last):
-                    time = str(i["time"]).split(" ")[1].split(".")[0]
-                    data[i["chatID"]] = [i["username"],i["message"],time]
-
-            return JsonResponse(data)
         return JsonResponse({})  
 
 def sendcmd(request):
@@ -224,11 +215,11 @@ def getchats(request):
         if len(u.values())==0:
 
             #re-add user
-            u = UserList(username=name,server=room,time=datetime.datetime.now().astimezone())
+            u = UserList(username=name,server=ServerList.objects.get(server=room),time=datetime.datetime.now().astimezone())
             u.save()
 
             #show that user joined
-            c = Chats(server=room,username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
+            c = Chats(server=ServerList.objects.get(server=room),username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
             c.save()
 
         else:
