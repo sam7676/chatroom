@@ -28,6 +28,7 @@ def chat(request):
     except:
         return HttpResponseRedirect(reverse('index'))
     #Pre-fetch validation
+    name = name.strip()
     if name=='' or room=='':
         messages.success(request,"Error: Empty string")
         return HttpResponseRedirect(reverse('index'))
@@ -55,7 +56,7 @@ def chat(request):
             u = UserList(username=name,server=s,time=datetime.datetime.now().astimezone())
             u.save()
             #Show that user joined
-            c = Chats(server=s,username='admin',message="Room created.",time=datetime.datetime.now().astimezone())
+            c = Chats(server=s,username='admin',message=f"Room '{room}' created.",time=datetime.datetime.now().astimezone())
             c.save()
             c = Chats(server=s,username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
             c.save()
