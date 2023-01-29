@@ -55,6 +55,8 @@ def chat(request):
             u = UserList(username=name,server=s,time=datetime.datetime.now().astimezone())
             u.save()
             #Show that user joined
+            c = Chats(server=s,username='admin',message="Room created.",time=datetime.datetime.now().astimezone())
+            c.save()
             c = Chats(server=s,username='admin',message=f"{name} joined the chat.",time=datetime.datetime.now().astimezone())
             c.save()
         else:
