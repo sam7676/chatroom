@@ -34,11 +34,13 @@
     var lastChat = -1;
     lastChat = getChats();
     setTimeout(scrollDiv, 100);
-    setInterval(getChats, 5000);
+    var interval = setInterval(getChats, 5000);
 
     function addToTable(data) {
+
         var table = document.getElementById("messages");
         var key = lastChat;
+        
         for (var key in data) {
             var row = table.insertRow(-1);
             var cell0 = row.insertCell(0);
@@ -64,6 +66,7 @@
         }
 
         lastChat = key;
+        
     }
 
     function scrollDiv() {
@@ -107,7 +110,9 @@
                 return response.json(); //Convert response to JSON
             })
             .then(data => {
-                addToTable(data);
+                clearInterval(interval);
+                getChats();
+                interval = setInterval(getChats, 5000);
             })
         document.getElementById("chatentry").value = '';
         setTimeout(scrollDiv, 100);
