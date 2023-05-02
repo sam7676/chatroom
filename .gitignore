@@ -1,3 +1,4 @@
-__pycache__
+__pycache__/
 hidden.py
-./__pycache__
+chatroom_project/__pycache__/
+chatroom_app/__pycache__/
