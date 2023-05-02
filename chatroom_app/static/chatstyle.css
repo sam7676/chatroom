@@ -57,10 +57,11 @@ body {
 #db {
     height: 430px;
     max-height: 430px;
-    color: #00FF00;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
     margin: auto;
+    color: #00FF00;
+    background: #000000;
     width: 50%; 
     overflow: auto;
 }
