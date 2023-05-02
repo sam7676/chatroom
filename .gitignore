@@ -1,2 +1,4 @@
 __pycache__/
 hidden.py
+chatroom_app/__pycache/
+chatroom_project/__pycache__/
